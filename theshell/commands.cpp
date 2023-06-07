@@ -4,8 +4,29 @@
 
 #include "commands.h"
 #include <iostream>
+#include <chrono>
+#include <iomanip>
 #include <fstream>
+#include <sstream>
+#include <ctime>
 
+// Helper function for time point conversion
+std::chrono::system_clock::time_point from_file_time(std::filesystem::file_time_type file_time) {
+    using namespace std::chrono;
+    auto sctp = time_point_cast<system_clock::duration>(file_time - std::filesystem::file_time_type::clock::now()
+                                                        + system_clock::now());
+    return sctp;
+}
+
+// Helper function to convert a time_point to a string
+std::string to_string(std::chrono::system_clock::time_point tp) {
+    std::time_t t = std::chrono::system_clock::to_time_t(tp);
+    std::tm tm{};
+    localtime_r(&t, &tm);
+    std::stringstream ss;
+    ss << std::put_time(&tm, "%Y-%m-%d %H:%M:%S");
+    return ss.str();
+}
 
 // Makes a new file
 int cmd_makefile(const std::vector<std::string>& args) {
@@ -158,55 +179,41 @@ int cmd_mkdir(const std::vector<std::string>& args) {
 }
 
 // Searches for a file
-// TODO: implement search by file size and modification date
 int cmd_search(const std::vector<std::string>& args) {
     if (args.size() < 2) {
-        std::cerr << "Error: not enough arguments. Please provide a path and a file name/extension.\n";
+        std::cerr << "Search: missing operands\n";
         return 1;
     }
 
-    const std::string& path = args[0];
-    const std::string& file_to_search = args[1];
+    const std::string& searchType = args[0];
+    const std::string& target = args[1];
 
-    try {
-        if (!std::filesystem::exists(path)) {
-            std::cerr << "Error: the path does not exist.\n";
-            return 1;
+    std::cout << "Searching for " << target << "...\n";
+
+    for (auto& dir : std::filesystem::recursive_directory_iterator(std::filesystem::current_path())) {
+        // Search by filename or extension
+        if ((searchType == "name" && dir.path().filename() == target) ||
+            (searchType == "ext" && dir.path().extension() == target)) {
+            std::cout << "Found: " << dir.path() << "\n";
         }
-
-        std::filesystem::recursive_directory_iterator dir(path);
-        std::filesystem::recursive_directory_iterator end;
-
-        while (dir != end) {
-            if (std::filesystem::is_regular_file(*dir)) {
-                std::string file_name = dir->path().filename();
-                if (file_name.find(file_to_search) != std::string::npos) {
-                    std::cout << "Found: " << dir->path() << "\n";
-                }
+            // Search by size
+        else if (searchType == "size" && args.size() == 4) {
+            std::uintmax_t size = std::filesystem::file_size(dir.path());
+            std::uintmax_t target_size = std::stoull(target);
+            const std::string& op = args[2];
+            if ((op == "<" && size < target_size)
+                || (op == ">" && size > target_size)
+                || (op == "=" && size == target_size)) {
+                std::cout << "Found: " << dir.path() << "\n";
             }
-            ++dir;
         }
-    } catch (const std::exception& ex) {
-        std::cerr << "Error: " << ex.what() << "\n";
-        return 1;
+        // TODO: Search by modification date
     }
 
     return 0;
 }
 
-std::map<std::string, std::function<int(const std::vector<std::string>&)>> command_dispatcher = {
-        {"makefile", cmd_makefile},
-        {"readfile", cmd_readfile},
-        {"writefile", cmd_writefile},
-        {"deletefile", cmd_deletefile},
-        {"renamefile", cmd_renamefile},
-        {"movefile", cmd_movefile},
-        {"copyfile", cmd_copyfile},
-        {"mkdir", cmd_mkdir},
-        {"help", cmd_help},
-        {"search", cmd_search},
-};
-
+// TODO: fix search description
 std::map<std::string, std::string> help_messages = {
         {"makefile", "makefile <filename> : Create a new file"},
         {"readfile", "readfile <filename> : Read a file"},
@@ -217,7 +224,8 @@ std::map<std::string, std::string> help_messages = {
         {"copyfile", "copyfile <filename> <destination> : Copy a file"},
         {"mkdir", "mkdir <directory_name> : Create a new directory"},
         {"help", "help : Display this help message"},
-        {"search", "search: Search for a file"},
+        {"search", "search <search type> <parameter>: Search for a file"},
+        {"fileinfo", "fileinfo <filename>: Displays file information"}
 };
 
 // Help function for the commands
@@ -239,7 +247,44 @@ int cmd_help(const std::vector<std::string>& args) {
     return 0;
 }
 
+// Displays file information
+int cmd_fileinfo(const std::vector<std::string>& args) {
+    if (args.empty()) {
+        std::cerr << "fileinfo: missing operand\n";
+        return 1;
+    }
 
+    std::filesystem::path filepath(args[0]);
+    if (!std::filesystem::exists(filepath)) {
+        std::cerr << "fileinfo: " << filepath << ": No such file or directory\n";
+        return 1;
+    }
+
+    std::cout << "Information for " << filepath << ":\n";
+    std::cout << "Size: " << std::filesystem::file_size(filepath) << " bytes\n";
+    std::cout << "Extension: " << filepath.extension() << "\n";
+
+    auto creation_time = std::filesystem::last_write_time(filepath);
+    std::chrono::system_clock::time_point tp_creation = from_file_time(creation_time);
+    std::cout << "Last modification date: " << to_string(tp_creation) << "\n";
+
+    return 0;
+}
+
+
+std::map<std::string, std::function<int(const std::vector<std::string>&)>> command_dispatcher = {
+        {"makefile", cmd_makefile},
+        {"readfile", cmd_readfile},
+        {"writefile", cmd_writefile},
+        {"deletefile", cmd_deletefile},
+        {"renamefile", cmd_renamefile},
+        {"movefile", cmd_movefile},
+        {"copyfile", cmd_copyfile},
+        {"mkdir", cmd_mkdir},
+        {"help", cmd_help},
+        {"search", cmd_search},
+        {"fileinfo", cmd_fileinfo},
+};
 
 // Command executor
 int execute_command(const std::string& command, const std::vector<std::string>& arguments){

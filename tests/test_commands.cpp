@@ -80,6 +80,7 @@ TEST(CommandTest, TestCreateDirectory) {
 }
 
 // help test
+// TODO: fix help for parameters
 TEST(CommandTest, TestHelp) {
     // No arguments needed for help command
     std::vector<std::string> args = {};
