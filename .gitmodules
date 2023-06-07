@@ -3,5 +3,6 @@
 	url = https://github.com/google/googletest.git
 
 [submodule "replxx"]
-    path = replxx
-    url = https://github.com/AmokHuginnsson/replxx.git
+	path = replxx
+	url = https://github.com/AmokHuginnsson/replxx.git
+
