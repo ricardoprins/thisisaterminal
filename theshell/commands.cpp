@@ -213,7 +213,6 @@ int cmd_search(const std::vector<std::string>& args) {
     return 0;
 }
 
-// TODO: fix search description
 std::map<std::string, std::string> help_messages = {
         {"makefile", "makefile <filename> : Create a new file"},
         {"readfile", "readfile <filename> : Read a file"},

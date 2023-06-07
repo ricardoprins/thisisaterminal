@@ -1,10 +1,6 @@
 //
 // Created by Ricardo Prins on 5/31/23.
 //
-// TODO:
-// 4. Menu System:
-//- Implement a menu system that allows the user to select the desired file operation from a list of options.
-//- Ensure that the menu system is easy to navigate and provides a clear understanding of available choices.
 
 #include <vector>
 #include <string>
