@@ -22,10 +22,14 @@ Ensure you have the following installed on your local development machine:
 To clone the repository, run the following command:
 
 ```bash
-git clone --recursive https://github.com/RicardoPrins/thisisaterminal.git
+git clone https://github.com/RicardoPrins/thisisaterminal.git
 ```
+Then, because I haven't done my work right with the dependencies, run from within the project folder:
 
-The `--recursive` flag is used to clone all the submodules along with the main project.
+```bash
+git clone https://github.com/google/googletest.git
+git clone https://github.com/AmokHuginnsson/replxx.git  
+```
 
 ### Building the Project
 
