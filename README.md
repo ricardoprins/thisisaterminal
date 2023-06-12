@@ -6,43 +6,63 @@ This is a simple shell I created. It's built on C++. It works, allegedly. It use
 - Google Test
 - Replxx
 
-These dependencies have been added as Git submodules in this project.
-
 ## Getting Started
 
 ### Prerequisites
 
 Ensure you have the following installed on your local development machine:
 
+- Git
 - CMake
 - A C++ compiler that supports at least C++17, which shouldn't be hard.
 
 ### Cloning the Repository
 
-To clone the repository, run the following command:
+#### For Unix/Linux/MacOS
 
-```bash
-git clone https://github.com/RicardoPrins/thisisaterminal.git
-```
-Then, because I haven't done my work right with the dependencies, run from within the project folder:
+1. Open your terminal
 
-```bash
-git clone https://github.com/google/googletest.git
-git clone https://github.com/AmokHuginnsson/replxx.git  
-```
+2. Clone the repository:
+    ```sh
+    git clone https://github.com/RicardoPrins/thisisaterminal.git
+    ```
 
-### Building the Project
+3. Navigate to the project's root directory:
+    ```sh
+    cd thisisaterminal
+    ```
 
-To build the project, navigate to the project directory and run:
+4. Run the build script:
+    ```sh
+    ./build.sh
+    ```
 
-```bash
-mkdir build
-cd build
-cmake ..
-make
-```
+#### For Windows
 
-This will create a `build` directory, generate the Makefile with CMake, and then compile the project with Make.
+This requires a POSIX compatible environment like Git Bash, Cygwin, or the Windows Subsystem for Linux (WSL), or you can use PowerShell. Note that the dependencies (`git`, `cmake`, and `make`) must also be installed and accessible from these environments.
+
+1. Open your terminal or PowerShell
+
+2. Clone the repository:
+    ```sh
+    git clone https://github.com/RicardoPrins/thisisaterminal.git
+    ```
+
+3. Navigate to the project's root directory:
+    ```sh
+    cd thisisaterminal
+    ```
+
+4. Run the build script. For Bash or similar:
+    ```sh
+    ./build.sh
+    ```
+   For PowerShell:
+    ```powershell
+    .\build.ps1
+    ```
+
+This script will take care of building the project and downloading the necessary dependencies. Now, you have successfully built the project and are ready to go!
 
 ### Running the Tests
 
