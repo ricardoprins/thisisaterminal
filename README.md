@@ -1,5 +1,5 @@
 # this is a terminal.
-This is a simple shell I created. It's built on C++. It works, allegedly. It uses CMake for building, so read below for help in case you need it.
+This is a simple shell I created. It's built on C++. It works, allegedly. ON WINDOWS TOO! It uses CMake for building, so read below for help in case you need it.
 
 ## Dependencies
 
@@ -24,7 +24,7 @@ Ensure you have the following installed on your local development machine:
 
 2. Clone the repository:
     ```sh
-    git clone https://github.com/RicardoPrins/thisisaterminal.git
+    git clone https://github.com/ricardoprins/thisisaterminal.git
     ```
 
 3. Navigate to the project's root directory:
@@ -45,7 +45,7 @@ This requires a POSIX compatible environment like Git Bash, Cygwin, or the Windo
 
 2. Clone the repository:
     ```sh
-    git clone https://github.com/RicardoPrins/thisisaterminal.git
+    git clone https://github.com/ricardoprins/thisisaterminal.git
     ```
 
 3. Navigate to the project's root directory:
