@@ -12,9 +12,9 @@ target_include_directories(command_tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/the
 target_link_libraries(command_tests gtest gtest_main)
 
 # Google Test stuff
-add_subdirectory(googletest)
+add_subdirectory(deps/googletest)
 target_link_libraries(command_tests gtest gtest_main)
 
 # Replxx stuff
-set(Replxx_DIR "${CMAKE_CURRENT_SOURCE_DIR}/replxx")
+set(Replxx_DIR "${CMAKE_CURRENT_SOURCE_DIR}/deps/replxx")
 add_subdirectory(${Replxx_DIR})

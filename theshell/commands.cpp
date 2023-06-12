@@ -2,8 +2,13 @@
 // Created by Ricardo Prins on 5/31/23.
 //
 
+#if defined(_WIN32) || defined(_WIN64)
+#define localtime_r(_Time, _Tm) localtime_s(_Tm, _Time)
+#endif
+
 #include "commands.h"
 #include <iostream>
+#include <filesystem>
 #include <chrono>
 #include <iomanip>
 #include <fstream>
